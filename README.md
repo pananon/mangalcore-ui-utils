@@ -150,6 +150,50 @@ Animates a number from start to end when it comes into view.
 <CountUp end={100} duration={2000} prefix="$" />
 ```
 
+### 18. GradientText
+Renders text with a gradient background (supports animation).
+```tsx
+<GradientText from="#3b82f6" to="#a855f7" animate>
+  Cool Gradient Header
+</GradientText>
+```
+
+### 19. Marquee
+Infinite scrolling container for logo walls or announcements.
+```tsx
+<Marquee duration={30} gap={40}>
+  <Logo1 /> <Logo2 /> <Logo3 />
+</Marquee>
+```
+
+### 20. RippleButton
+A button with a Material-UI style ripple click effect.
+```tsx
+<RippleButton onClick={handleClick}>Click Me</RippleButton>
+```
+
+### 21. SpotlightCard
+A card with a glowing spotlight effect that follows the mouse cursor.
+```tsx
+<SpotlightCard style={{ padding: 20 }}>
+  <h3>Hover Me</h3>
+</SpotlightCard>
+```
+
+### 22. FadeIn
+Animates content entry (fade in + slide up) when it enters the viewport.
+```tsx
+<FadeIn delay={200} direction="up">
+  <p>I appear smoothly on scroll.</p>
+</FadeIn>
+```
+
+### 23. ReadingProgress
+A fixed top bar that indicates how far the user has scrolled.
+```tsx
+<ReadingProgress color="#8b5cf6" height={4} />
+```
+
 ## Next.js Note
 
 This library is fully compatible with Next.js App Router. All components are exported as client components where necessary ("use client").
