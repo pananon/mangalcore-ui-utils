@@ -1,0 +1,67 @@
+{
+  "name": "@mangalcore/ui-utils",
+  "version": "0.0.1",
+  "description": "A collection of tiny, production-ready React utility components.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "changeset": "changeset",
+    "release": "changeset publish",
+    "demo": "cd demo && npm run dev"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "utils",
+    "ui",
+    "typescript"
+  ],
+  "author": "Mangal",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@types/node": "^20.11.0",
+    "@types/qrcode.react": "^1.0.3",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "prettier": "^3.2.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "lucide-react": "^0.309.0",
+    "qrcode.react": "^3.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pananon/mangalcore-ui-utils.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pananon/mangalcore-ui-utils/issues"
+  },
+  "homepage": "https://github.com/pananon/mangalcore-ui-utils#readme"
+}
