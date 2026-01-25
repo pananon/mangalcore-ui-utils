@@ -103,6 +103,53 @@ An image component with a fallback for broken URLs.
 <SafeImage src="broken.jpg" fallback="placeholder.png" />
 ```
 
+### 11. TruncatedText
+Truncates long text with a "Read more / Show less" toggle.
+```tsx
+<TruncatedText text="Long description..." charLimit={100} />
+```
+
+### 12. StatusDot
+Shows a status indicator (online, offline, busy, away, or custom).
+```tsx
+<StatusDot status="online" />
+<StatusDot status="busy" pulse />
+```
+
+### 13. KeyboardShortcut
+Displays styled hotkeys (e.g., ⌘ + K).
+```tsx
+<KeyboardShortcut keys={['⌘', 'K']} />
+```
+
+### 14. SkeletonLoader
+A pulsing placeholder for loading states.
+```tsx
+<SkeletonLoader width={200} height={20} borderRadius={4} />
+```
+
+### 15. ClickOutside
+Detects clicks outside of the wrapped element.
+```tsx
+<ClickOutside onClickOutside={() => closeDropdown()}>
+  <div className="dropdown">...</div>
+</ClickOutside>
+```
+
+### 16. Portal
+Renders content into `document.body` (useful for modals/tooltips).
+```tsx
+<Portal>
+  <div className="modal">I am attached to body!</div>
+</Portal>
+```
+
+### 17. CountUp
+Animates a number from start to end when it comes into view.
+```tsx
+<CountUp end={100} duration={2000} prefix="$" />
+```
+
 ## Next.js Note
 
 This library is fully compatible with Next.js App Router. All components are exported as client components where necessary ("use client").
