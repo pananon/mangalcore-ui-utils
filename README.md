@@ -115,4 +115,4 @@ This library is fully compatible with Next.js App Router. All components are exp
 
 ## License
 
-MIT © [Mangal](https://github.com/Mangal)
+MIT © [MangalCore](https://github.com/pananon)
