@@ -9,9 +9,19 @@ import {
     JsonViewer,
     QRCodeWrapper,
     SafeImage,
+    TruncatedText,
+    StatusDot,
+    KeyboardShortcut,
+    SkeletonLoader,
+    ClickOutside,
+    Portal,
+    CountUp,
 } from '@mangalcore/ui-utils';
+import { useState } from 'react';
 
 function App() {
+    const [modalOpen, setModalOpen] = useState(false);
+
     return (
         <div className="container">
             <h1>@mangalcore/ui-utils</h1>
@@ -129,6 +139,76 @@ function App() {
                         width={100}
                         height={100}
                     />
+                </div>
+            </section>
+
+            <section>
+                <h2>11. TruncatedText</h2>
+                <TruncatedText
+                    text="This is a very long text that should probably be truncated because it takes up way too much space in the UI and we want to keep things clean. Users can click to expand if they really want to read the whole thing."
+                    charLimit={50}
+                />
+            </section>
+
+            <section>
+                <h2>12. StatusDot</h2>
+                <div className="demo-row">
+                    <StatusDot status="online" title="Online" />
+                    <StatusDot status="busy" pulse title="Busy (Standard)" />
+                    <StatusDot status="away" title="Away" />
+                    <StatusDot status="offline" title="Offline" />
+                    <StatusDot status="custom" color="purple" pulse title="Streaming" />
+                </div>
+            </section>
+
+            <section>
+                <h2>13. KeyboardShortcut</h2>
+                <div className="demo-row">
+                    <KeyboardShortcut keys={['⌘', 'K']} />
+                    <KeyboardShortcut keys={['Ctrl', 'Shift', 'F']} />
+                </div>
+            </section>
+
+            <section>
+                <h2>14. SkeletonLoader</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <SkeletonLoader height={40} width={40} borderRadius="50%" />
+                    <SkeletonLoader width={200} height={20} />
+                    <SkeletonLoader width={150} height={20} />
+                </div>
+            </section>
+
+            <section>
+                <h2>15. ClickOutside</h2>
+                <div className="demo-row">
+                    <ClickOutside onClickOutside={() => setModalOpen(false)}>
+                        <button onClick={() => setModalOpen(!modalOpen)}>
+                            {modalOpen ? 'Click outside to close me' : 'Click to open fake modal'}
+                        </button>
+                        {modalOpen && (
+                            <div style={{ padding: 20, border: '1px solid #ccc', marginTop: 10 }}>
+                                I am a modal/dropdown. Click outside this box to close me.
+                            </div>
+                        )}
+                    </ClickOutside>
+                </div>
+            </section>
+
+            <section>
+                <h2>16. Portal</h2>
+                <span>See the bottom of body for the portal content</span>
+                <Portal>
+                    <div style={{ position: 'fixed', bottom: 10, right: 10, background: '#333', color: '#fff', padding: 8, borderRadius: 4, opacity: 0.8, fontSize: 12 }}>
+                        I am rendered via &lt;Portal /&gt;
+                    </div>
+                </Portal>
+            </section>
+
+            <section>
+                <h2>17. CountUp</h2>
+                <div className="demo-row" style={{ fontSize: '2rem', fontWeight: 'bold' }}>
+                    <CountUp end={1000} prefix="$" duration={2500} />
+                    <CountUp end={85.5} suffix="%" decimals={1} />
                 </div>
             </section>
         </div>
