@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 interface CountUpProps {
     end: number;
@@ -26,25 +26,7 @@ export function CountUp({
     const startTime = useRef<number | null>(null);
     const hasAnimated = useRef(false);
 
-    useEffect(() => {
-        const element = ref.current;
-        if (!element) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting && !hasAnimated.current) {
-                    hasAnimated.current = true;
-                    startAnimation();
-                }
-            },
-            { threshold: 0.1 }
-        );
-
-        observer.observe(element);
-        return () => observer.disconnect();
-    }, [end, duration]); // Restart if end/duration changes? Maybe not for simple version.
-
-    const startAnimation = () => {
+    const startAnimation = useCallback(() => {
         const step = (timestamp: number) => {
             if (!startTime.current) startTime.current = timestamp;
             const progress = timestamp - startTime.current;
@@ -63,7 +45,25 @@ export function CountUp({
             }
         };
         requestAnimationFrame(step);
-    };
+    }, [start, end, duration]);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !hasAnimated.current) {
+                    hasAnimated.current = true;
+                    startAnimation();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, [startAnimation]);
 
     return (
         <span ref={ref} className={className}>
