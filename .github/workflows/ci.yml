@@ -36,6 +36,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Check Changeset Status
-        run: npx changeset status
