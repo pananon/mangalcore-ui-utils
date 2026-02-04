@@ -1,5 +1,11 @@
 # @mangalcore/ui-utils
 
+## 0.0.5
+
+### Patch Changes
+
+- Added 10 new hooks: useDebounce, useThrottle, useLocalStorage, useSessionStorage, useOutsideClick, useMediaQuery, useWindowSize, useIntersectionObserver, useScrollLock, usePrevious.
+
 ## 0.0.4
 
 ### Patch Changes
