@@ -194,6 +194,71 @@ A fixed top bar that indicates how far the user has scrolled.
 <ReadingProgress color="#8b5cf6" height={4} />
 ```
 
+## Hooks
+
+### 1. useDebounce
+Delays updating a value until a specified time has passed without further changes.
+```tsx
+const debouncedValue = useDebounce(inputValue, 500);
+```
+
+### 2. useThrottle
+Ensures a value is updated at most once per specified interval.
+```tsx
+const throttledScroll = useThrottle(scrollPosition, 100);
+```
+
+### 3. useLocalStorage
+Syncs state with `localStorage` (updates across tabs).
+```tsx
+const [name, setName] = useLocalStorage('current-user', 'Guest');
+```
+
+### 4. useSessionStorage
+Syncs state with `sessionStorage` (cleared when tab closes).
+```tsx
+const [token, setToken] = useSessionStorage('auth-token', '');
+```
+
+### 5. useOutsideClick
+Detects clicks outside a specific element (useful for dropdowns/modals).
+```tsx
+const ref = useRef(null);
+useOutsideClick(ref, () => setOpen(false));
+```
+
+### 6. useMediaQuery
+Returns true if the current window matches the media query.
+```tsx
+const isMobile = useMediaQuery('(max-width: 768px)');
+```
+
+### 7. useWindowSize
+Tracks the window dimensions.
+```tsx
+const { width, height } = useWindowSize();
+```
+
+### 8. useIntersectionObserver
+Detects when an element is visible in the viewport.
+```tsx
+const ref = useRef(null);
+const entry = useIntersectionObserver(ref, { threshold: 0.5 });
+// entry?.isIntersecting
+```
+
+### 9. useScrollLock
+Locks the body scroll (useful for modals).
+```tsx
+useScrollLock(isModalOpen);
+```
+
+### 10. usePrevious
+Tracks the previous value of a state or prop.
+```tsx
+const prevCount = usePrevious(count);
+```
+
 ## Next.js Note
 
 This library is fully compatible with Next.js App Router. All components are exported as client components where necessary ("use client").
