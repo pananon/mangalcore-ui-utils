@@ -8,3 +8,9 @@ export * from './useWindowSize';
 export * from './useIntersectionObserver';
 export * from './useScrollLock';
 export * from './usePrevious';
+
+// AI / chat UI hooks
+export * from './useSmoothText';
+export * from './useAutoScroll';
+export * from './useAutoResizeTextarea';
+export * from './useCopyToClipboard';

@@ -1,0 +1,115 @@
+# @mangalcore/ui-utils
+
+> Tiny, dependency-light React components and hooks for Next.js and AI apps. Covers streaming LLM text, stick-to-bottom chat scrolling, auto-growing prompt inputs, JSON-LD structured data for SEO, copy-to-clipboard, plus 30+ dashboard and landing-page utilities. TypeScript, ESM + CJS, tree-shakable. React >= 18.
+
+Install: `npm install @mangalcore/ui-utils`
+
+## Usage rules
+
+- Import everything from `@mangalcore/ui-utils`. The bundle is marked `'use client'`, so components can be rendered from Next.js App Router Server Components without adding a directive yourself (pass only serializable props from a Server Component; props that take functions, such as `onClickOutside` or `renderToggle`, need a Client Component parent). Hooks must be called from your own Client Components, as with any React hook.
+- In Server Components, route handlers or `generateMetadata`, import plain functions and `JsonLd` from `@mangalcore/ui-utils/server` (no client boundary).
+- Components use inline styles and accept `className`, so they work with Tailwind or plain CSS. No CSS import or provider is needed.
+
+## AI chat UI
+
+- `useSmoothText(text: string, { charsPerSecond?: number = 60, enabled?: boolean = true }): string`. Smooths a streaming LLM response into a steady character-by-character reveal. Pass the full text received so far and render the return value (works with any markdown renderer). Text present on first render shows instantly; respects prefers-reduced-motion.
+- `<StreamingText text={string} isStreaming?={boolean} smooth?={boolean = true} charsPerSecond?={number} cursor?={ReactNode | false} className? style? />`. Plain-text streaming response with a blinking cursor. Uses `useSmoothText` internally.
+- `useAutoScroll<T extends HTMLElement = HTMLDivElement>({ threshold?: number = 80 }): { ref, isAtBottom: boolean, scrollToBottom(behavior?: ScrollBehavior): void }`. Stick-to-bottom scrolling for chat and log views. Attach `ref` to the scroll container. Follows new content automatically and stops following when the user scrolls up. No dependency array needed.
+- `useAutoResizeTextarea(value: string, { maxHeight?: number = 240 }): RefObject<HTMLTextAreaElement>`. Grows a textarea with its content up to `maxHeight`, then scrolls. Use with `rows={1}`.
+- `useCopyToClipboard(resetAfterMs?: number = 2000): { copied: boolean, copy(text: string): Promise<boolean> }`. For "Copy" buttons on responses and code blocks.
+
+```tsx
+'use client';
+import { useAutoScroll, useAutoResizeTextarea, StreamingText } from '@mangalcore/ui-utils';
+import { useChat } from '@ai-sdk/react';
+import { useState } from 'react';
+
+export function Chat() {
+  const { messages, sendMessage, status } = useChat();
+  const [input, setInput] = useState('');
+  const { ref, isAtBottom, scrollToBottom } = useAutoScroll<HTMLDivElement>();
+  const inputRef = useAutoResizeTextarea(input, { maxHeight: 200 });
+
+  return (
+    <>
+      <div ref={ref} style={{ height: 500, overflowY: 'auto' }}>
+        {messages.map((m, i) => {
+          const text = m.parts.map((p) => (p.type === 'text' ? p.text : '')).join('');
+          const streaming = status === 'streaming' && i === messages.length - 1;
+          return m.role === 'assistant'
+            ? <StreamingText key={m.id} text={text} isStreaming={streaming} />
+            : <p key={m.id}>{text}</p>;
+        })}
+      </div>
+      {!isAtBottom && <button onClick={() => scrollToBottom()}>Jump to latest</button>}
+      <textarea ref={inputRef} rows={1} value={input} onChange={(e) => setInput(e.target.value)} />
+      <button onClick={() => { sendMessage({ text: input }); setInput(''); }}>Send</button>
+    </>
+  );
+}
+```
+
+## SEO
+
+- `<JsonLd data={object | object[]} id?={string} />`. Renders schema.org structured data as `<script type="application/ld+json">`, escaping `<` to prevent script injection. Include `"@context": "https://schema.org"` in `data`. Server-safe; also exported from `@mangalcore/ui-utils/server`.
+
+```tsx
+// app/blog/[slug]/page.tsx (Server Component)
+import { JsonLd } from '@mangalcore/ui-utils/server';
+
+export default function Post() {
+  return (
+    <article>
+      <JsonLd data={{ '@context': 'https://schema.org', '@type': 'Article', headline: 'My post', datePublished: '2026-01-01' }} />
+    </article>
+  );
+}
+```
+
+## Components
+
+- `<CopyToClipboard text={string} onCopy?={() => void} className? />`. Icon button that copies text and shows "Copied!".
+- `<TimeAgo date={Date | string} className? />`. Live-updating relative time ("5 minutes ago").
+- `<AvatarFromName name={string} size?={number} borderRadius?={string} className? />`. Deterministic initials avatar.
+- `<MaskedText value={string} visibleChars?={number} maskChar?={string} className? />`. Masks secrets like API keys.
+- `<FileSize bytes={number} decimals?={number} className? />`. Human-readable byte size.
+- `<LatencyBadge ms={number} thresholds?={{ good: number, warning: number }} className? />`. Green, yellow or red latency badge.
+- `<ProgressRing percent={number} size? strokeWidth? color? trackColor? className? />`. Circular progress.
+- `<JsonViewer data={unknown} initialExpanded?={boolean} className? />`. Collapsible JSON tree.
+- `<QRCodeWrapper value={string} size? level?={'L'|'M'|'Q'|'H'} includeMargin? renderAs?={'svg'|'canvas'} imageSettings? className? />`. QR code.
+- `<SafeImage src fallback={string} {...imgProps} />`. `<img>` that swaps to `fallback` on error.
+- `<TruncatedText text={string} charLimit?={number} expandText? collapseText? renderToggle?={(expanded, onClick) => ReactNode} className? />`. Read more / read less.
+- `<StatusDot status?={'online'|'offline'|'busy'|'away'|'custom'} color? pulse?={boolean} size? title? className? />`. Presence indicator.
+- `<KeyboardShortcut keys={string[]} className? />`. Renders each key as a key cap, e.g. keys={["Ctrl", "K"]}.
+- `<SkeletonLoader width? height? borderRadius? className? />`. Loading placeholder.
+- `<ClickOutside onClickOutside={() => void} as?={ElementType} className?>{children}</ClickOutside>`. Calls handler on outside clicks.
+- `<Portal containerId?={string}>{children}</Portal>`. Renders children into `document.body` or a container.
+- `<CountUp end={number} start? duration?={ms} decimals? prefix? suffix? className? />`. Animated number.
+- `<GradientText from? to? angle? animate?={boolean} {...spanProps}>{children}</GradientText>`. Gradient-filled text.
+- `<Marquee duration?={seconds} gap?={px} reverse? pauseOnHover? className?>{children}</Marquee>`. Infinite scrolling row (logo walls).
+- `<RippleButton rippleColor? duration? {...buttonProps} />`. Button with click ripple.
+- `<ReadingProgress color? height? className? />`. Scroll progress bar fixed to the top.
+- `<SpotlightCard spotlightColor? cardBackground? borderColor? {...divProps}>{children}</SpotlightCard>`. Card with a mouse-following spotlight.
+- `<FadeIn direction?={'up'|'down'|'left'|'right'|'none'} duration? delay? distance? threshold? className?>{children}</FadeIn>`. Fades children in when scrolled into view.
+
+## Hooks
+
+- `useDebounce<T>(value: T, delay: number): T`
+- `useThrottle<T>(value: T, interval?: number = 500): T`
+- `useLocalStorage<T>(key: string, initialValue: T): [T, setValue]`. SSR-safe, synced across tabs and hook instances.
+- `useSessionStorage<T>(key: string, initialValue: T): [T, setValue]`
+- `useOutsideClick(ref, handler, mouseEvent?: 'mousedown' | 'mouseup')`
+- `useMediaQuery(query: string): boolean`
+- `useWindowSize(): { width?: number, height?: number }`
+- `useIntersectionObserver(ref, { threshold?, root?, rootMargin?, freezeOnceVisible? }): IntersectionObserverEntry | undefined`
+- `useScrollLock(lock?: boolean = true)`. Locks body scroll (modals).
+- `usePrevious<T>(value: T): T | undefined`
+
+## Functions
+
+- `formatBytes(bytes: number, decimals?: number = 2): string`. Also exported from `@mangalcore/ui-utils/server`.
+
+## Links
+
+- [README](https://github.com/pananon/mangalcore-ui-utils#readme)
+- [npm](https://www.npmjs.com/package/@mangalcore/ui-utils)

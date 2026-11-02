@@ -1,12 +1,44 @@
 {
     "name": "@mangalcore/ui-utils",
     "version": "0.0.5",
-    "description": "A collection of tiny, production-ready React utility components.",
+    "description": "Tiny React components and hooks for Next.js and AI apps: streaming LLM text, stick-to-bottom chat scroll, auto-resizing prompt input, JSON-LD SEO, copy-to-clipboard, and 30+ UI utilities. TypeScript, tree-shakable, Server Component safe.",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            }
+        },
+        "./server": {
+            "import": {
+                "types": "./dist/server.d.mts",
+                "default": "./dist/server.mjs"
+            },
+            "require": {
+                "types": "./dist/server.d.ts",
+                "default": "./dist/server.js"
+            }
+        },
+        "./llms.txt": "./llms.txt",
+        "./package.json": "./package.json"
+    },
+    "typesVersions": {
+        "*": {
+            "server": [
+                "./dist/server.d.ts"
+            ]
+        }
+    },
     "files": [
-        "dist"
+        "dist",
+        "llms.txt"
     ],
     "scripts": {
         "dev": "tsup --watch",
@@ -21,10 +53,39 @@
     },
     "keywords": [
         "react",
+        "nextjs",
+        "next.js",
+        "app-router",
+        "react-server-components",
+        "typescript",
+        "hooks",
+        "react-hooks",
         "components",
-        "utils",
         "ui",
-        "typescript"
+        "utils",
+        "tailwind",
+        "ai",
+        "llm",
+        "chatbot",
+        "chat-ui",
+        "ai-chat",
+        "streaming",
+        "streaming-text",
+        "typewriter",
+        "vercel-ai-sdk",
+        "openai",
+        "auto-scroll",
+        "stick-to-bottom",
+        "textarea-autosize",
+        "json-ld",
+        "structured-data",
+        "schema-org",
+        "seo",
+        "copy-to-clipboard",
+        "use-debounce",
+        "use-local-storage",
+        "dashboard",
+        "saas"
     ],
     "author": "Mangal",
     "license": "MIT",
