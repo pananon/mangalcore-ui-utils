@@ -1,6 +1,6 @@
 # @mangalcore/ui-utils
 
-A portfolio-quality collection of tiny, production-ready React utility components for SaaS dashboards and Next.js apps.
+Tiny, production-ready React components and hooks for Next.js and AI apps: streaming LLM text, stick-to-bottom chat scroll, auto-growing prompt inputs, JSON-LD for SEO, and 30+ dashboard and landing-page utilities.
 
 ![NPM Version](https://img.shields.io/npm/v/@mangalcore/ui-utils?color=blue&style=flat-square)
 ![License](https://img.shields.io/npm/l/@mangalcore/ui-utils?style=flat-square)
@@ -9,7 +9,8 @@ A portfolio-quality collection of tiny, production-ready React utility component
 ## Features
 
 - 🚀 **Tiny & Tree-shakable**: Import only what you need.
-- ⚡ **Zero Setup**: Works with Vite, Next.js, and CRA.
+- ⚡ **Zero Setup**: Works with Vite, Next.js (App Router safe), and CRA.
+- 🤖 **AI-ready**: Chat UI hooks for streaming responses, plus an `llms.txt` API reference for coding assistants.
 - 🎨 **Minimal Styling**: Easy to override with CSS modules or Tailwind.
 - 📘 **TypeScript**: First-class type support.
 - 📦 **ESM + CJS**: Compatible with modern and legacy bundlers.
@@ -194,6 +195,52 @@ A fixed top bar that indicates how far the user has scrolled.
 <ReadingProgress color="#8b5cf6" height={4} />
 ```
 
+## AI chat UI & SEO
+
+Building a chatbot or AI app? These cover the parts every chat UI ends up hand-rolling.
+
+### useSmoothText / StreamingText
+LLM streams arrive in bursty chunks. `useSmoothText` turns them into a steady typing reveal and works with any renderer (including markdown). `StreamingText` is the plain-text version with a blinking cursor.
+```tsx
+<StreamingText text={completion} isStreaming={isLoading} />
+
+// or with markdown
+const visible = useSmoothText(message.content);
+return <ReactMarkdown>{visible}</ReactMarkdown>;
+```
+
+### useAutoScroll
+Stick-to-bottom scrolling. Follows new content while a reply streams in and stops following when the user scrolls up to read.
+```tsx
+const { ref, isAtBottom, scrollToBottom } = useAutoScroll<HTMLDivElement>();
+
+<div ref={ref} style={{ height: 500, overflowY: 'auto' }}>
+  {messages.map((m) => <Message key={m.id} {...m} />)}
+</div>
+{!isAtBottom && <button onClick={() => scrollToBottom()}>Jump to latest</button>}
+```
+
+### useAutoResizeTextarea
+A prompt box that grows with its content, then scrolls past `maxHeight`.
+```tsx
+const ref = useAutoResizeTextarea(input, { maxHeight: 200 });
+<textarea ref={ref} rows={1} value={input} onChange={(e) => setInput(e.target.value)} />
+```
+
+### useCopyToClipboard
+```tsx
+const { copied, copy } = useCopyToClipboard();
+<button onClick={() => copy(code)}>{copied ? 'Copied!' : 'Copy'}</button>
+```
+
+### JsonLd
+schema.org structured data for rich search results. Escapes `<` so content can't break out of the script tag.
+```tsx
+import { JsonLd } from '@mangalcore/ui-utils/server'; // works in Server Components
+
+<JsonLd data={{ '@context': 'https://schema.org', '@type': 'Product', name: 'Acme Widget' }} />
+```
+
 ## Hooks
 
 ### 1. useDebounce
@@ -259,9 +306,19 @@ Tracks the previous value of a state or prop.
 const prevCount = usePrevious(count);
 ```
 
-## Next.js Note
+## Next.js App Router
 
-This library is fully compatible with Next.js App Router. All components are exported as client components where necessary ("use client").
+The main entry is marked `'use client'`, so you can render these components from Server Components without adding a directive yourself. Pass only serializable props from a Server Component; props that take functions (like `onClickOutside`) need a Client Component parent. Hooks are called from your own Client Components, as usual.
+
+For code that runs on the server (Server Components, route handlers, `generateMetadata`), use the server entry. It has no client boundary:
+
+```tsx
+import { JsonLd, formatBytes } from '@mangalcore/ui-utils/server';
+```
+
+## For AI coding assistants
+
+The package ships an [`llms.txt`](./llms.txt) with the full API in one file: every component, hook and prop. Point your assistant at `node_modules/@mangalcore/ui-utils/llms.txt`, or at the copy on GitHub. Every export also has JSDoc with examples, so editors and agents see usage in the type definitions.
 
 ## Roadmap
 

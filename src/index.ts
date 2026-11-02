@@ -24,6 +24,10 @@ export * from './components/ReadingProgress';
 export * from './components/SpotlightCard';
 export * from './components/FadeIn';
 
+// AI apps & SEO
+export * from './components/StreamingText';
+export * from './components/JsonLd';
+
 export * from './utils/formatBytes';
 
 export * from './hooks';
